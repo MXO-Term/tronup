@@ -1,0 +1,198 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0"/>
+    <title>TronUp</title>
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">-->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/public/styles.css?t=11">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js"></script>
+    <script src="/public/jquery.rcounterup.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/1.7.1/countUp.min.js"></script>-->
+    <script src="/public/jquery.ui.touch-punch.min.js"></script>
+    <script src="/public/scripts.js?t=11"></script>
+    <style>[v-cloak] { display:none; }</style>
+</head>
+<body class="bg-body">
+    <div class="b-app" id="App" v-cloak>
+        <div class="b-header i-margin-bottom-large">
+            <div class="i-container i-container-collapse">
+                <div class="i-flex i-flex-middle i-flex-between">
+                    <div>
+                        <div class="b-header__logo">
+                            <img src="/public/logo.png?1" width="130">
+                            <!--<img src="img/logo-eclipse.png" srcset="img/logo-eclipse@2x.png 2x,img/logo-eclipse@3x.png 3x" class="logo-eclipse">-->
+                        </div>
+                    </div>
+                    <div>
+                        <ul class="b-socials i-list i-flex i-flex-middle">
+                           
+                            <li><a href="https://t.me/TronUp" target="_blank"><i class="fa fa-telegram" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="i-container">
+
+            <div class="i-block__title i-margin-bottom-large">
+                <div class="i-margin-bottom-medium">
+                    <strong>Decentralized Investment Fund<br> The smartest way to multiply your <span class="i-text-red">TRX</span></strong>
+                </div>
+                <div class="i-margin-bottom">
+                    <p class="i-text-muted">From 16 to 28<span class="i-text-red">%</span> Daily <span class="i-text-red">ROI</span> <br> 9<span class="i-text-red">%</span> 3<span class="i-text-red">lvl</span> Referral Program + Deposit Cashback</p>
+                </div>
+                <a :href="'https://tronscan.org/#/address/' + contract_address" target="_blank" class="i-btn">Contract</a>
+            </div>
+            <div class="i-block i-margin-bottom-medium">
+                <div class="i-grid">
+                    <div class="i-w-1-1 i-w-1-2@s i-text-center i-margin-bottom">
+                        <div class="i-text-large i-text-bold">{{ contract.invested }}</div>
+                        <div class="i-text-small i-text-bold i-text-muted">Total <span class="i-text-red">TRX</span> Invested</div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-2@s i-text-center i-margin-bottom">
+                        <div class="i-text-large i-text-bold">{{ contract.match_bonus }}</div>
+                        <div class="i-text-small i-text-bold i-text-muted">Total Referral <span class="i-text-red">TRX</span> Reward</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="i-block__title i-margin-bottom">
+                <strong>Calculate Profit</strong>
+            </div>
+            <div class="i-block i-margin-bottom-medium">
+                <div class="i-margin-bottom-medium">
+                    <div class="i--text-small i-text-muted">Choose Deposit Period</div>
+                    <div>
+                        <div class="i-text-medium i-text-bold">
+                            <span class="js-slider-text">7</span> Days
+                        </div>
+                        <div class="js-slider">
+                            <div class="ui-slider-handle js-slider-handle"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="i-grid i-flex-middle">
+                    <div class="i-w-1-1 i-w-1-2@s i-w-1-4@m i-margin-bottom">
+                        <div class="i-form-group i-margin-bottom">
+                            <label class="i-form-label i-text-muted">Enter Deposit Amount</label>
+                            <div class="i-form-input">
+                                <input type="text" v-model.number="calc.amount" placeholder="10000" @change="calc.amount = calc.amount < 50 ? 50 : calc.amount">
+                                <span class="i-text-small i-text-red i-cursor-pointer" @click="calc.amount = Math.max(50, Math.floor(user.trx - 3))">Max</span>
+                            </div>
+                        </div>
+                        <div class="i-text-center">
+                            <a href="#" class="i-btn" @click.prevent="deposit(calc.tarif, calc.amount)">Invest</a>
+                            <div class="i-text-small i-text-thin i-text-red" v-if="!tron.account"><a href="https://tronlink.org">Sign in through TronLink</a></div>
+                            <div class="i-text-small i-text-thin i-text-red" v-if="tron.account">transaction fee up to 3 TRX applies</div>
+                        </div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-2@s i-w-1-4@m i-margin-bottom">
+                        <div class="i-text-center">
+                            <span class="i-text-muted">Daily ROI</span>&nbsp;&nbsp;<span class="i-text-medium i-text-bold">{{ (tarifs[calc.tarif].percent / tarifs[calc.tarif].days).toFixed(2) }}</span><span class="i-text-medium i-text-red">%</span>
+                        </div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-2@s i-w-1-4@m i-margin-bottom">
+                        <div class="i-text-center">
+                            <span class="i-text-muted">Total Profit</span>&nbsp;&nbsp;<span class="i-text-medium i-text-bold">{{ tarifs[calc.tarif].percent }}</span><span class="i-text-medium i-text-red">%</span>
+                        </div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-2@s i-w-1-4@m i-margin-bottom">
+                        <div class="b-circle">
+                            <div class="i-text-muted i-margin-bottom">In {{ tarifs[calc.tarif].days }} days <br> you will earn</div>
+                            <div class="i-text-medium i-text-bold">{{ calc.amount * tarifs[calc.tarif].percent / 100 }} <span class="i-text-red">TRX</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="i-block__title i-margin-bottom">
+                <strong>Dashboard</strong>
+            </div>
+            <div class="i-block i-margin-bottom-medium">
+                <div class="i-grid i-margin-bottom">
+                    <div class="i-w-1-1 i-w-1-4@s i-margin-bottom">
+                        <div class="i-margin-bottom">
+                            <div class="i-text-muted i-text-nowrap">Withdrawable (Divs+Refs+Cashback)</div>
+                            <div class="i-text-medium i-text-bold">{{ user.for_withdraw }} <span class="i-text-red">TRX</span></div>
+                        </div>
+                        <div class="i-text-left">
+                            <a href="#" class="i-btn" @click.prevent="withdraw()">Withdraw</a>
+                        </div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-4@s i-margin-bottom">
+                        <div class="i-text-muted i-text-nowrap">Total Invested</div>
+                        <div class="i-text-medium i-text-bold">{{ user.total_invested }} <span class="i-text-red">TRX</span></div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-4@s i-margin-bottom">
+                        <div class="i-text-muted i-text-nowrap">Total Withdrawal</div>
+                        <div class="i-text-medium i-text-bold">{{ user.total_withdrawn }} <span class="i-text-red">TRX</span></div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-4@s i-margin-bottom">
+                        <div class="i-text-muted i-text-nowrap">Total Referral Reward</div>
+                        <div class="i-text-medium i-text-bold">{{ user.total_match_bonus }} <span class="i-text-red">TRX</span></div>
+                    </div>
+                </div>
+                <div class="i-grid">
+                    <div class="i-w-1-1 i-w-1-1@s i-w-1-2@m i-margin-bottom">
+                        <div class="i-margin-bottom">
+                            <div class="i-text-muted">You Referral Link</div>
+                            <div class="i-text-bold" v-if="user.total_invested > 0">{{ location.origin }}/?ref={{ tron.account }} <span id="copy" class="i-text-red" @click="copyText(location.origin + '/?ref=' + tron.account)">Copy</span></div>
+                            <div class="i-text-small i-text-thin i-text-red" v-if="user.total_invested == 0">You will get your ref link after investing</div>
+                        </div>
+                        <div>
+                            <div><span class="i-text-muted">1 lvl (5% Referral Rewards)</span> - <span class="i-text-bold">{{ user.structure[0] }}</span></div>
+                            <div><span class="i-text-muted">2 lvl (3% Referral Rewards)</span> - <span class="i-text-bold">{{ user.structure[1] }}</span></div>
+                            <div><span class="i-text-muted">3 lvl (1% Referral Rewards)</span> - <span class="i-text-bold">{{ user.structure[2] }}</span></div>
+                            <div><span class="i-text-muted">1% Deposit Cashback </span></div>
+                        </div>
+                    </div>
+                    <div class="i-w-1-1 i-w-1-1@s i-w-1-2@m i-margin-bottom">
+                        <div class="i-text-muted">Last Events</div>
+                        <div class="b-overflow">
+                            <a :href="'https://tronscan.org/#/transaction/' + event.tx" target="_blank" class="i-text-nowrap" v-for="event in events">{{ new Date(event.time).toLocaleDateString() }} {{ event.type }} {{ event.amount > 0 ? event.amount : '' }} <span class="i-text-red" v-if="event.amount > 0">TRX</span></a>
+                        </div>
+                    </div>
+</div>
+            </div>
+<div class="i-block__title i-margin-bottom"><strong>How it works</strong></div>
+<div class="i-block i-margin-bottom-medium"><h2 class="how-works__title"></h2> <div class="how-works__text text"><p>TronUp is a fully decentralized investment platform built on a smart contract on the TRON network.
+                    The smart contract is open and verifiable, it can't be corrupted or tampered with.
+                    Blockchain technology ensures 100% fairness and transparency of the fund. TronUp is the smartest, simplest way to multiply your assets in just a few days.</p></div> <div class="how-works__steps-wrap"><div class="how-works__steps-list"><div class="how-works__step"><div class="how-works__step-head"><i class="how-works__step-head-icon icon-round icon-round--pencil"></i> <h4 class="how-works__step-head-title">Crypto wallet</h4> <span class="how-works__step-head-number">1</span></div> <div class="how-works__step-text text"><p>To start investing users must be logged in to a crypto wallet  that supports Tron (TRX). The most popular Tron wallets that have the most users are TronLink, TronWallet.</p></div></div> <div class="how-works__step"><div class="how-works__step-head"><i class="how-works__step-head-icon icon-round icon-round--contract"></i> <h4 class="how-works__step-head-title">Smart contract</h4> <span class="how-works__step-head-number">2</span></div> <div class="how-works__step-text text"><p>TronUp smart contract generates a percentage the investment amount daily and guarantees a final profit.</p></div></div> <div class="how-works__step"><div class="how-works__step-head"><i class="how-works__step-head-icon icon-round icon-round--profit"></i> <h4 class="how-works__step-head-title">Investment Profit</h4> <span class="how-works__step-head-number">3</span></div> <div class="how-works__step-text text"><p>The profit (dividends) accrued to your account on a daily basis and in real-time. You can withdraw the dividends at any time.</p></div></div> <div class="how-works__step"><div class="how-works__step-head"><i class="how-works__step-head-icon icon-round icon-round--referal"></i> <h4 class="how-works__step-head-title">Referral Reward</h4> <span class="how-works__step-head-number">4</span></div> <div class="how-works__step-text text"><p>Every investor provided with a generated referral link to attract new users to TronUp. The three-level referral program allows earning 5% + 3% + 1% from invited investors.
+<br> 5 <br> The TronUp Fund is a completely decentralized system, there is no middle man. And is powered by the Tron Blockchain. The code is open source and can be verified by anyone.</p></div></div></div></div>
+        </div>
+<br>
+<br>
+<br>
+<div class="i-text-muted"><strong class="i-text-red">TronUp © 2020 </strong></div>
+<br>
+<br>
+<br>
+        <div class="b-footer">
+            <div class="i-container">
+
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="i-modal">
+        <div class="i-modal__wrap">
+            <div class="i-modal__close"></div>
+            <div class="i-modal__body">
+
+            </div>
+        </div>
+    </div>
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
+    <script src="/public/common.js?1594996792"></script>
+</body>
+</html>
